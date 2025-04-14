@@ -315,7 +315,7 @@ public class MainWindow extends JFrame {
         JPanel taskItem = new JPanel(new BorderLayout(10, 0));
         taskItem.setBackground(new Color(248, 249, 250));
         taskItem.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        taskItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Set maximum height
+        taskItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
         // Left side: Checkbox and title
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -345,6 +345,12 @@ public class MainWindow extends JFrame {
         JComboBox<Task.Category> categoryCombo = new JComboBox<>(Task.Category.values());
         categoryCombo.setMaximumSize(new Dimension(100, 30));
         
+        JButton dateButton = new JButton(task.getFormattedDueDate());
+        dateButton.setMaximumSize(new Dimension(150, 30));
+        
+        JButton descButton = new JButton("Description");
+        descButton.setMaximumSize(new Dimension(100, 30));
+        
         JButton detailsButton = new JButton("Details");
         detailsButton.setMaximumSize(new Dimension(70, 30));
         
@@ -355,6 +361,8 @@ public class MainWindow extends JFrame {
 
         rightPanel.add(priorityCombo);
         rightPanel.add(categoryCombo);
+        rightPanel.add(dateButton);
+        rightPanel.add(descButton);
         rightPanel.add(detailsButton);
         rightPanel.add(deleteButton);
 
@@ -397,15 +405,115 @@ public class MainWindow extends JFrame {
         categoryCombo.setSelectedItem(task.getCategory());
         categoryCombo.addActionListener(e -> task.setCategory((Task.Category) categoryCombo.getSelectedItem()));
 
+        descButton.addActionListener(e -> {
+            JDialog descDialog = new JDialog(this, "Task Description", true);
+            descDialog.setLayout(new BorderLayout(10, 10));
+            descDialog.setSize(400, 300);
+            descDialog.setLocationRelativeTo(this);
+
+            JPanel descPanel = new JPanel(new BorderLayout(10, 10));
+            descPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            JTextArea descArea = new JTextArea(task.getDescription());
+            descArea.setLineWrap(true);
+            descArea.setWrapStyleWord(true);
+            descArea.setFont(new Font("Arial", Font.PLAIN, 14));
+            
+            JScrollPane scrollPane = new JScrollPane(descArea);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            
+            JButton saveButton = new JButton("Save");
+            saveButton.addActionListener(ev -> {
+                task.setDescription(descArea.getText());
+                descDialog.dispose();
+            });
+
+            descPanel.add(scrollPane, BorderLayout.CENTER);
+            descPanel.add(saveButton, BorderLayout.SOUTH);
+            descDialog.add(descPanel);
+            descDialog.setVisible(true);
+        });
+
+        dateButton.addActionListener(e -> {
+            JDialog dateDialog = new JDialog(this, "Set Due Date", true);
+            dateDialog.setLayout(new BorderLayout(10, 10));
+            dateDialog.setSize(300, 200);
+            dateDialog.setLocationRelativeTo(this);
+
+            JPanel datePanel = new JPanel(new GridLayout(3, 1, 5, 5));
+            datePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            // Date picker
+            JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
+            JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
+            dateSpinner.setEditor(dateEditor);
+            if (task.getDueDate() != null) {
+                dateSpinner.setValue(java.sql.Timestamp.valueOf(task.getDueDate()));
+            }
+
+            // Time picker
+            JSpinner timeSpinner = new JSpinner(new SpinnerDateModel());
+            JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
+            timeSpinner.setEditor(timeEditor);
+            if (task.getDueDate() != null) {
+                timeSpinner.setValue(java.sql.Timestamp.valueOf(task.getDueDate()));
+            }
+
+            // Clear date button
+            JButton clearButton = new JButton("Clear Date");
+            clearButton.addActionListener(ev -> {
+                task.setDueDate(null);
+                dateButton.setText("No due date");
+                dateDialog.dispose();
+            });
+
+            datePanel.add(dateSpinner);
+            datePanel.add(timeSpinner);
+            datePanel.add(clearButton);
+
+            JButton saveButton = new JButton("Save");
+            saveButton.addActionListener(ev -> {
+                java.util.Date date = (java.util.Date) dateSpinner.getValue();
+                java.util.Date time = (java.util.Date) timeSpinner.getValue();
+                
+                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                calendar.setTime(date);
+                
+                java.util.Calendar timeCalendar = java.util.Calendar.getInstance();
+                timeCalendar.setTime(time);
+                
+                calendar.set(java.util.Calendar.HOUR_OF_DAY, timeCalendar.get(java.util.Calendar.HOUR_OF_DAY));
+                calendar.set(java.util.Calendar.MINUTE, timeCalendar.get(java.util.Calendar.MINUTE));
+                
+                task.setDueDate(calendar.getTime().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+                dateButton.setText(task.getFormattedDueDate());
+                dateDialog.dispose();
+            });
+
+            dateDialog.add(datePanel, BorderLayout.CENTER);
+            dateDialog.add(saveButton, BorderLayout.SOUTH);
+            dateDialog.setVisible(true);
+        });
+
         detailsButton.addActionListener(e -> showTaskDetails(task));
 
         deleteButton.addActionListener(e -> {
-            tasks.remove(task);
-            Container parent = taskItem.getParent();
-            parent.remove(taskItem);
-            parent.revalidate();
-            parent.repaint();
-            updateTaskCounters();
+            int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to delete this task?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (choice == JOptionPane.YES_OPTION) {
+                tasks.remove(task);
+                Container parent = taskItem.getParent();
+                parent.remove(taskItem);
+                parent.revalidate();
+                parent.repaint();
+                updateTaskCounters();
+            }
         });
 
         return taskItem;
@@ -428,6 +536,8 @@ public class MainWindow extends JFrame {
         content.add(new JLabel("Priority: " + task.getPriority()));
         content.add(Box.createVerticalStrut(10));
         content.add(new JLabel("Category: " + task.getCategory()));
+        content.add(Box.createVerticalStrut(10));
+        content.add(new JLabel("Due Date: " + task.getFormattedDueDate()));
 
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> dialog.dispose());
