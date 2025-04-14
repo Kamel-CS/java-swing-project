@@ -114,11 +114,6 @@ The Task Manager application follows a modular architecture with clear separatio
    - `UserAuth.java`: Authentication logic
    - `DataPersistence.java`: Data storage and retrieval
 
-### Design Patterns
-- **MVC (Model-View-Controller)**: The application loosely follows the MVC pattern
-- **Singleton**: Used for data persistence
-- **Observer**: Used for UI updates when data changes
-
 ## User Interface
 
 The Task Manager features a modern, intuitive user interface with the following components:
