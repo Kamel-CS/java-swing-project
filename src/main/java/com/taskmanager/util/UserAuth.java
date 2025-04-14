@@ -8,10 +8,9 @@ public class UserAuth {
 
   // === DEVELOPER NOTE: ADD NEW USERS HERE === //
   public static final Map<String, User> USER_DATABASE = Map.of(
-      "oop", new User("123", DEFAULT_AVATAR),
+      "oop", new User("123", DEFAULT_AVATAR)
       // Add more users below this line
-      "random", new User("456", DEFAULT_AVATAR),
-      "someone", new User("789", DEFAULT_AVATAR));
+  );
 
   public static boolean authenticate(String username, String password) {
     User user = USER_DATABASE.get(username);
