@@ -13,8 +13,9 @@ public class LoginScreen extends JFrame {
     public LoginScreen() {
         setTitle("Task Manager - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(800, 600);
         setLocationRelativeTo(null);
+        setResizable(false);
 
         // Create main panel with gradient background
         JPanel mainPanel = new JPanel() {
@@ -35,42 +36,90 @@ public class LoginScreen extends JFrame {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-        // Create components
+        // Create components with improved styling
         JLabel titleLabel = new JLabel("Task Manager");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+
+        // Create input panel with consistent styling
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setOpaque(false);
+        inputPanel.setMaximumSize(new Dimension(400, 200));
+        inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Username field with label
+        JLabel usernameLabel = new JLabel("Username");
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usernameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
         usernameField = new JTextField(20);
-        usernameField.setMaximumSize(new Dimension(200, 30));
-        usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        usernameField.setMaximumSize(new Dimension(400, 40));
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 16));
+        usernameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        usernameField.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Password field with label
+        JLabel passwordLabel = new JLabel("Password");
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordLabel.setForeground(Color.WHITE);
+        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 5, 0));
 
         passwordField = new JPasswordField(20);
-        passwordField.setMaximumSize(new Dimension(200, 30));
-        passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passwordField.setMaximumSize(new Dimension(400, 40));
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordField.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // Login button with improved styling
         JButton loginButton = new JButton("Login");
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.setMaximumSize(new Dimension(100, 30));
+        loginButton.setMaximumSize(new Dimension(200, 50));
+        loginButton.setFont(new Font("Arial", Font.BOLD, 18));
+        loginButton.setBackground(new Color(46, 204, 113));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setFocusPainted(false);
+        loginButton.setBorderPainted(false);
+        loginButton.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        loginButton.setMargin(new Insets(10, 10, 10, 10));
 
+        // Add hover effect to login button
+        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loginButton.setBackground(new Color(39, 174, 96));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loginButton.setBackground(new Color(46, 204, 113));
+            }
+        });
+
+        // Error label with improved styling
         errorLabel = new JLabel(" ");
+        errorLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         errorLabel.setForeground(new Color(231, 76, 60));
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-        // Add components to panel
+        // Add components to input panel
+        inputPanel.add(usernameLabel);
+        inputPanel.add(usernameField);
+        inputPanel.add(passwordLabel);
+        inputPanel.add(passwordField);
+        inputPanel.add(Box.createVerticalStrut(30));
+        inputPanel.add(loginButton);
+        inputPanel.add(errorLabel);
+
+        // Add components to main panel
         mainPanel.add(titleLabel);
-        mainPanel.add(Box.createVerticalStrut(30));
-        mainPanel.add(new JLabel("Username:"));
-        mainPanel.add(Box.createVerticalStrut(5));
-        mainPanel.add(usernameField);
-        mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(new JLabel("Password:"));
-        mainPanel.add(Box.createVerticalStrut(5));
-        mainPanel.add(passwordField);
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(loginButton);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(errorLabel);
+        mainPanel.add(Box.createVerticalGlue());
+        mainPanel.add(inputPanel);
+        mainPanel.add(Box.createVerticalGlue());
 
         // Add login button action
         loginButton.addActionListener(e -> {
@@ -81,8 +130,7 @@ public class LoginScreen extends JFrame {
                 loggedInUsername = username;
                 dispose();
                 SwingUtilities.invokeLater(() -> {
-                    MainWindow mainWindow = new MainWindow(username);
-                    mainWindow.setVisible(true);
+                    new MainWindow(username);
                 });
             } else {
                 errorLabel.setText("Invalid username or password");

@@ -22,8 +22,9 @@ public class MainWindow extends JFrame {
         this.username = username;
         setTitle("Task Manager - " + username);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 800);
         setLocationRelativeTo(null);
+        setMinimumSize(new Dimension(900, 700));
 
         // Load tasks from file for this user
         tasks = new ArrayList<>(DataPersistence.loadTasks(username));
@@ -33,7 +34,7 @@ public class MainWindow extends JFrame {
 
         // Create left sidebar (Account Section)
         JPanel sidebar = createSidebar();
-        sidebar.setPreferredSize(new Dimension(200, 0));
+        sidebar.setPreferredSize(new Dimension(250, 0));
         sidebar.setBackground(new Color(44, 62, 80));
 
         // Create main content panel with card layout
@@ -66,6 +67,9 @@ public class MainWindow extends JFrame {
                 DataPersistence.saveTasks(username, tasks);
             }
         });
+
+        // Make the window visible
+        setVisible(true);
     }
 
     private JPanel createSidebar() {
