@@ -1,217 +1,59 @@
 # UML Diagrams for Task Manager Application
 
+All diagrams are available in the `docs/diagrams` directory. The diagrams were created using [PlantUML](https://plantuml.com/), a tool for creating UML diagrams from text.
+
 ## Use Case Diagram
 
-```
-+------------------+     +------------------+
-|   Task Manager   |     |   Task Manager   |
-+------------------+     +------------------+
-         |                       |
-         |                       |
-+--------+--------+     +--------+--------+
-|                 |     |                 |
-|  User           |     |  System         |
-|                 |     |                 |
-+-----------------+     +-----------------+
-         |                       |
-         |                       |
-+--------+--------+     +--------+--------+
-|                 |     |                 |
-|  Login          |     |  Show Splash    |
-|  Logout         |     |  Screen         |
-|                 |     |                 |
-+-----------------+     +-----------------+
-         |                       |
-         |                       |
-+--------+--------+     +-----------------+
-|                 |     |                 |
-|  Task Management|     |  Data Persistence|
-|                 |     |                 |
-+-----------------+     +-----------------+
-         |
-         |
-+--------+--------+
-|                 |
-|  Create Task    |
-|  Edit Task      |
-|  Delete Task    |
-|  Complete Task  |
-|  Set Due Date   |
-|  Set Priority   |
-|  Set Category   |
-|  Add Description|
-|  View Details   |
-|                 |
-+-----------------+
-```
+![Use Case Diagram](docs/diagrams/use_case_diagram.png)
+
+The use case diagram shows the main functionalities of the Task Manager application:
+- User authentication (Login/Logout)
+- Task management (Create, Edit, Delete, Complete tasks)
+- System features (Splash screen, Data persistence)
 
 ## Class Diagram
 
-```
-+----------------+       +----------------+       +----------------+
-|     Main       |       |  SplashScreen  |       |  LoginScreen   |
-+----------------+       +----------------+       +----------------+
-| +main(String[]) |       | -timer:Timer   |       | -usernameField |
-|                 |       | -splashLabel   |       | -passwordField |
-|                 |       | +SplashScreen()|       | -errorLabel    |
-|                 |       | -createUI()    |       | +LoginScreen() |
-|                 |       +----------------+       | -createUI()    |
-|                 |                               +----------------+
-+----------------+
+![Class Diagram](docs/diagrams/class_diagram.png)
 
-+----------------+       +----------------+       +----------------+
-|  MainWindow    |       |     Task      |       |     User      |
-+----------------+       +----------------+       +----------------+
-| -tasks:List    |       | -id:String     |       | -password:String|
-| -username:String|      | -title:String  |       | -avatarPath:String|
-| +MainWindow()  |      | -description:String|   | +User()       |
-| -createSidebar()|     | -completed:boolean|    | +getPassword()|
-| -createTaskPanel|     | -priority:Priority|    | +getAvatarPath()|
-| -addTaskToList()|     | -category:Category|    +----------------+
-| -createTaskItem()|    | -dueDate:LocalDateTime|
-| -showTaskDetails()|   | +Task()        |
-| -loadTasks()    |     | +getters/setters|
-| -saveTasks()    |     +----------------+
-+----------------+
-
-+----------------+       +----------------+       +----------------+
-|   Priority     |       |   Category    |       |   UserAuth    |
-+----------------+       +----------------+       +----------------+
-| HIGH           |       | SCHOOL        |       | -USER_DATABASE |
-| MEDIUM         |       | WORK          |       | +authenticate()|
-| LOW            |       | PERSONAL      |       | +getUserAvatar()|
-+----------------+       +----------------+       +----------------+
-
-+----------------+
-| DataPersistence|
-+----------------+
-| -DATA_DIRECTORY|
-| +saveTasks()   |
-| +loadTasks()   |
-+----------------+
-```
+The class diagram illustrates the structure of the application:
+- Main classes: `Main`, `SplashScreen`, `LoginScreen`, `MainWindow`
+- Model classes: `Task`, `User`
+- Utility classes: `UserAuth`, `DataPersistence`
+- Enums: `Priority`, `Category`
 
 ## Sequence Diagrams
 
 ### Application Start Sequence
-
-```
-User          Main          SplashScreen     LoginScreen
-  |             |                |                |
-  |--start app->|                |                |
-  |             |--create------->|                |
-  |             |                |                |
-  |             |<--timer ends---|                |
-  |             |                |                |
-  |             |----------------|--create------->|
-  |             |                |                |
-  |<--show login|                |                |
-  |             |                |                |
-```
+![Application Start Sequence](docs/diagrams/sequence_app_start.png)
 
 ### User Login Sequence
-
-```
-User          LoginScreen     UserAuth      MainWindow
-  |               |              |              |
-  |--enter cred-->|              |              |
-  |               |--validate--->|              |
-  |               |<--result-----|              |
-  |               |              |              |
-  |<--show error--|              |              |
-  |               |              |              |
-  |--enter cred-->|              |              |
-  |               |--validate--->|              |
-  |               |<--result-----|              |
-  |               |              |              |
-  |               |--------------|--create----->|
-  |               |              |              |
-  |<--close-------|              |              |
-  |               |              |              |
-```
+![User Login Sequence](docs/diagrams/sequence_login.png)
 
 ### Task Management Sequence
-
-```
-User          MainWindow     Task          DataPersistence
-  |               |              |              |
-  |--create task->|              |              |
-  |               |--create----->|              |
-  |               |              |              |
-  |               |<--task-------|              |
-  |               |              |              |
-  |--edit task--->|              |              |
-  |               |--update----->|              |
-  |               |              |              |
-  |--complete---->|              |              |
-  |               |--set completed|              |
-  |               |              |              |
-  |--delete task->|              |              |
-  |               |--remove----->|              |
-  |               |              |              |
-  |               |--save------->|              |
-  |               |              |              |
-  |<--update UI---|              |              |
-  |               |              |              |
-```
+![Task Management Sequence](docs/diagrams/sequence_task_management.png)
 
 ### Task Description Sequence
-
-```
-User          MainWindow     Task          JDialog
-  |               |              |              |
-  |--click desc-->|              |              |
-  |               |--get desc--->|              |
-  |               |              |              |
-  |               |<--desc-------|              |
-  |               |              |              |
-  |               |--------------|--create----->|
-  |               |              |              |
-  |<--show dialog-|              |              |
-  |               |              |              |
-  |--edit desc--->|              |              |
-  |               |              |              |
-  |--click save-->|              |              |
-  |               |--set desc--->|              |
-  |               |              |              |
-  |               |--------------|--close------>|
-  |               |              |              |
-```
+![Task Description Sequence](docs/diagrams/sequence_task_description.png)
 
 ### Task Due Date Sequence
-
-```
-User          MainWindow     Task          JDialog
-  |               |              |              |
-  |--click date-->|              |              |
-  |               |--get date--->|              |
-  |               |              |              |
-  |               |<--date-------|              |
-  |               |              |              |
-  |               |--------------|--create----->|
-  |               |              |              |
-  |<--show dialog-|              |              |
-  |               |              |              |
-  |--select date->|              |              |
-  |               |              |              |
-  |--click save-->|              |              |
-  |               |--set date--->|              |
-  |               |              |              |
-  |               |--------------|--close------>|
-  |               |              |              |
-```
+![Task Due Date Sequence](docs/diagrams/sequence_task_due_date.png)
 
 ### Application Close Sequence
+![Application Close Sequence](docs/diagrams/sequence_app_close.png)
 
-```
-User          MainWindow     DataPersistence
-  |               |              |
-  |--close app--->|              |
-  |               |              |
-  |               |--save tasks-->|
-  |               |              |
-  |               |--dispose----->|
-  |               |              |
-  |<--close-------|              |
-  |               |              |
-``` 
+## Diagram Source Files
+
+The source files for all diagrams are available in the `docs/diagrams` directory:
+- `use_case_diagram.puml`
+- `class_diagram.puml`
+- `sequence_app_start.puml`
+- `sequence_login.puml`
+- `sequence_task_management.puml`
+- `sequence_task_description.puml`
+- `sequence_task_due_date.puml`
+- `sequence_app_close.puml`
+
+To modify or regenerate the diagrams:
+1. Install PlantUML
+2. Edit the .puml files
+3. Generate new diagrams using PlantUML 
