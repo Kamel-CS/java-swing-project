@@ -85,6 +85,9 @@ The Task Manager is a Java Swing-based desktop application designed to help user
 ```
 java-swing-project/
 ├── bin/                    # Compiled class files
+├── docs/                   # Documentation and diagrams
+│   ├── diagrams/          # Diagrams
+│   └── screenshots/       # Application screenshots
 ├── src/
 │   └── main/
 │       ├── java/
@@ -274,95 +277,29 @@ All screenshots are located in the `docs/screenshots` directory. Below are the r
 
 ## Class Diagrams
 
+## UML Diagrams
+
+### Sequence Diagrams
+
+#### User Login Sequence
+![User Login Sequence](docs/diagrams/user_login_sequence.jpg)
+
+#### Task Management Sequence
+![Task Management Sequence](docs/diagrams/task_management_sequence.jpg)
+
+### Use Case Diagrams
+
+#### Developer Account Creation Sequence
+![Developer Account Creation Sequence](docs/diagrams/uml_dev_account_creation.jpg)
+
+#### Authentication Use Case
+![Authentication Use Case](docs/diagrams/uml_user_authentification.jpg)
+
+#### Task Management Use Case
+![Task Management Use Case](docs/diagrams/uml_task_management.jpg)
+
 ### Main Classes
-```
-+----------------+       +----------------+       +----------------+
-|     Main       |       |  LoginScreen   |       |  MainWindow    |
-+----------------+       +----------------+       +----------------+
-| +main(String[]) |       | -usernameField |       | -tasks:List    |
-|                 |       | -passwordField |       | -username:String|
-|                 |       | -errorLabel    |       | +MainWindow()   |
-|                 |       | +LoginScreen() |       | -createSidebar()|
-|                 |       | +getLoggedInUser|       | -createTaskPanel|
-|                 |       +----------------+       | -addTaskToList()|
-|                 |                               | -createTaskItem()|
-|                 |                               | -showTaskDetails()|
-+----------------+                               +----------------+
-
-+----------------+       +----------------+       +----------------+
-|     Task       |       |     User      |       |   UserAuth     |
-+----------------+       +----------------+       +----------------+
-| -id:String     |       | -password:String|     | -USER_DATABASE |
-| -title:String  |       | -avatarPath:String|   | +authenticate()|
-| -description:String|   | +User()       |     | +getUserAvatar()|
-| -completed:boolean|    | +getPassword()|     +----------------+
-| -priority:Priority|    | +getAvatarPath()|
-| -category:Category|    +----------------+
-| -dueDate:LocalDateTime|
-| +Task()        |
-| +getters/setters|
-+----------------+
-
-+----------------+       +----------------+       +----------------+
-|   Priority     |       |   Category    |       | DataPersistence|
-+----------------+       +----------------+       +----------------+
-| HIGH           |       | SCHOOL        |       | -DATA_DIRECTORY|
-| MEDIUM         |       | WORK          |       | +saveTasks()   |
-| LOW            |       | PERSONAL      |       | +loadTasks()   |
-+----------------+       +----------------+       +----------------+
-```
-
-## Sequence Diagrams
-
-### User Login Sequence
-```
-User          LoginScreen     UserAuth      MainWindow
-  |               |              |              |
-  |--launch app-->|              |              |
-  |               |              |              |
-  |--enter cred-->|              |              |
-  |               |--validate--->|              |
-  |               |<--result-----|              |
-  |               |              |              |
-  |<--show error--|              |              |
-  |               |              |              |
-  |--enter cred-->|              |              |
-  |               |--validate--->|              |
-  |               |<--result-----|              |
-  |               |              |              |
-  |               |--------------|--create----->|
-  |               |              |              |
-  |<--close-------|              |              |
-  |               |              |              |
-```
-
-### Task Management Sequence
-```
-User          MainWindow     Task          DataPersistence
-  |               |              |              |
-  |--create task->|              |              |
-  |               |              |              |
-  |               |--create----->|              |
-  |               |              |              |
-  |               |<--task-------|              |
-  |               |              |              |
-  |--edit task--->|              |              |
-  |               |              |              |
-  |               |--update----->|              |
-  |               |              |              |
-  |--complete---->|              |              |
-  |               |              |              |
-  |               |--set completed|              |
-  |               |              |              |
-  |--delete task->|              |              |
-  |               |              |              |
-  |               |--remove----->|              |
-  |               |              |              |
-  |               |--save------->|              |
-  |               |              |              |
-  |<--update UI---|              |              |
-  |               |              |              |
-```
+![Class Diagram](docs/diagrams/class_diagram.jpg)
 
 ## Future Enhancements
 
