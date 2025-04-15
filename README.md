@@ -412,9 +412,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Thanks to all contributors who have helped improve this project
-- Special thanks to the Java Swing community for their excellent documentation and examples
+- Special thanks to Dr. Ahmed Nacer for his guidance and support
+- Thanks to the Java Swing community for their excellent documentation and examples
+- Thanks to all team members for their contributions to this project
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by Team OOP2 - UMBB 2024/2025
