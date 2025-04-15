@@ -1,5 +1,7 @@
 # Task Manager Application Documentation
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Installation and Setup](#installation-and-setup)
@@ -386,6 +388,33 @@ User          MainWindow     Task          DataPersistence
 19. **Task Recurrence**: Add support for recurring tasks
 20. **Task Progress**: Add progress tracking for tasks
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### How to Contribute
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Setup
+1. Clone the repository
+2. Set up your development environment
+3. Make your changes
+4. Test your changes
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped improve this project
+- Special thanks to the Java Swing community for their excellent documentation and examples
+
 ---
 
-This documentation provides a comprehensive overview of the Task Manager application. The diagrams (use case, sequence, and class) will be added separately as requested. 
+Made with ❤️ by [Your Name]
